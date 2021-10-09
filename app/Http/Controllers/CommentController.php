@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\CommentRequest;
+use Auth;
+use App\Comment;
+use App\Post;
 
 class CommentController extends Controller
 {
@@ -32,9 +36,23 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
-        //
+        $comment = new Comment;
+
+        $comment -> body = $request -> body;
+        //ログイン中のIDという意味合い
+        $comment -> user_id =  Auth::id();
+        $comment -> post_id = $request -> post_id;
+
+        $comment ->save();
+
+        $post = Post::find($request -> post_id);
+
+        $comments = Comment::where('post_id' , $request->post_id)->get();
+
+        return view('posts.show' , compact('post', 'comments'));
+
     }
 
     /**
@@ -45,7 +63,11 @@ class CommentController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::find($id);
+
+        $comments = Comment::where('post_id' , $id) -> get();
+
+        return view('posts.show' , compact('post' , 'comments'));
     }
 
     /**
@@ -79,6 +101,12 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+    
+        $comment = Comment::find($id);
+
+        $comment -> delete();
+
+        return back();
+
     }
 }
