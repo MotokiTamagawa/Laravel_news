@@ -28,3 +28,6 @@ Route::get('/posts/{post}', 'PostController@show')->name('posts.show');
 
 
 Route::resource('comments' , 'CommentController');
+
+# ゲストユーザーログイン
+Route::get('guest', 'Auth\LoginController@guestLogin')->name('login.guest');
