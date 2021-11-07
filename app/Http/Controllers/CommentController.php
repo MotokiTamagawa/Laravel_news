@@ -10,6 +10,14 @@ use App\Post;
 
 class CommentController extends Controller
 {
+
+    public function comment()
+    {
+        $comments = Conment::all();
+        
+        return view("posts.show", compact('comments'));        
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -51,8 +59,8 @@ class CommentController extends Controller
 
         $comments = Comment::where('post_id' , $request->post_id)->get();
 
-        return view('posts.show' , compact('post', 'comments'));
-
+        return redirect()->back();
+        
     }
 
     /**
@@ -67,7 +75,7 @@ class CommentController extends Controller
 
         $comments = Comment::where('post_id' , $id) -> get();
 
-        return view('posts.show' , compact('post' , 'comments'));
+        return view('posts.show', compact('post' , 'comments'));
     }
 
     /**
@@ -106,7 +114,8 @@ class CommentController extends Controller
 
         $comment -> delete();
 
-        return back();
+        // return back();
+        return redirect()->back();
 
     }
 }
